@@ -135,16 +135,16 @@ def get_endings(node: TrieNode) -> List[str]:
     # after going through all the children, return the current node's words  
     return node_words
 
-# test_trie = Trie()
+test_trie = Trie()
 
-# test_trie.insert('bob')
+test_trie.insert('bob')
 
-# test_trie.insert('hello')
-# test_trie.insert('handanovic')
-# test_trie.insert('hander')
-# test_trie.insert('hand')
-# test_trie.insert('haz')
-# test_trie.insert('ha')
-# test_trie.insert('ha ha')
+test_trie.insert('hello')
+test_trie.insert('handanovic')
+test_trie.insert('hander')
+test_trie.insert('hand')
+test_trie.insert('haz')
+test_trie.insert('ha')
+test_trie.insert('ha ha')
 
-# print(test_trie.find_all_strings('h'))
+print(test_trie.find_all_strings('h'))
