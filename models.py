@@ -3,6 +3,7 @@ from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy
 from decouple import config
 from flask_cors import CORS
+from typing import List, Dict
 
 # set up the app 
 app = Flask(__name__, static_folder='client/build', static_url_path='')
@@ -27,4 +28,14 @@ class RepoStrings(db.Model):
 class RepoSchema(ma.Schema):
     class Meta:
         fields=('repo_id', 'repo')
-        
+
+def serialize_search_results(search_list: List[str]) -> Dict[int, str]:
+    serialized_dict = {}
+
+    # TODO: APPLY MERGE SORT TO SORT LIST BY LENGTH
+
+    # loop through and serialize the list
+    for i in range(len(search_list)):
+        serialized_dict[i+1] = search_list[i]
+    print(serialized_dict)
+    return serialized_dict
