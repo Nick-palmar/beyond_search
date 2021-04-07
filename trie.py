@@ -21,6 +21,7 @@ class LetterDict():
 
 
 def get_letter_dict():
+    # TODO: Add underscore and dashes
     letter_dict = {}
     a_ASCII = 97
     z_ASCII = 122
@@ -67,14 +68,14 @@ class Trie():
                 # create a new node 
                 current_node.children[char] = TrieNode(char)
             # switch nodes to child node
-            print(current_node.children)
+            # print(current_node.children)
             current_node = current_node.children[char]
-            print(current_node.char)
+            # print(current_node.char)
         
         # when the loop ends, the current node will contian the final node for the word
         current_node.is_word = True
-        print(current_node.char)
-        print(current_node.is_word)
+        # print(current_node.char)
+        # print(current_node.is_word)
     
 
     def find_all_strings(self, curr_word: str) -> Optional[List[str]]:
@@ -103,11 +104,11 @@ class Trie():
         base_word = curr_word[:-1]
         all_endings = pd.Series(get_endings(curr_node))
         all_strings = all_endings.apply(lambda word_ending: base_word+word_ending)
-
         return all_strings.tolist()
     
-def get_endings(node: TrieNode):
-    # BC1: check if we are at a leaf, return char
+
+def get_endings(node: TrieNode) -> List[str]:
+    # BC: check if we are at a leaf, return char
     is_empty = True
     for letter in node.children:
         if node.children[letter] != None:
@@ -116,20 +117,7 @@ def get_endings(node: TrieNode):
     if is_empty:
         return [node.char]
     
-    # BC2: The node is a word but not leaf node
-    # child_words = pd.Series([])
-    # if node.is_word:
-    #     # loop through all the nodes and get leaves
-    #     for letter in node.children:
-    #         if node.children[letter] is not None:
-    #             # recursive call on next node
-    #             next_node = node.children[letter]
-    #             # combine the current nodes characters with the next node's characters
-    #             new_ending = node.char + return_ending(next_node)
-    #             child_words.append(new_ending)
-    #     return [node.char, *child_words]
-    
-    # not a word or a leaf node
+    # not or a leaf node
     # loop through all the nodes and get leaves
     node_words = []
     for letter in node.children:
@@ -140,20 +128,25 @@ def get_endings(node: TrieNode):
             subword_list = pd.Series(get_endings(next_node))
             # print(subword_list)
             subword_list = subword_list.apply(lambda subword: node.char+subword) 
-            node_words += [*subword_list.tolist()]
+            node_words += subword_list.tolist()
+    # take the current node if it is a word
+    if node.is_word:
+        node_words += [node.char]
     # after going through all the children, return the current node's words  
     return node_words
 
 
 
-test_trie = Trie()
+# test_trie = Trie()
 
-test_trie.insert('bob')
+# test_trie.insert('bob')
 
-test_trie.insert('hello')
-test_trie.insert('handanovic')
-test_trie.insert('hander')
-test_trie.insert('haz')
+# test_trie.insert('hello')
+# test_trie.insert('handanovic')
+# test_trie.insert('hander')
+# test_trie.insert('hand')
+# test_trie.insert('haz')
+# test_trie.insert('ha')
 
 
-print(test_trie.find_all_strings('han'))
+# print(test_trie.find_all_strings('han'))
