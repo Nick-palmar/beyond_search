@@ -100,42 +100,49 @@ class Trie():
             all_strings.append(curr_word)
 
         # go through the remainder of the tree, keeping track of words and append it to all strings
-        base_word = curr_word
+        base_word = curr_word[:-1]
+        all_endings = pd.Series(get_endings(curr_node))
+        all_strings = all_endings.apply(lambda word_ending: base_word+word_ending)
 
-
-        return all_strings
+        return all_strings.tolist()
     
-def return_ending(node: TrieNode):
+def get_endings(node: TrieNode):
     # BC1: check if we are at a leaf, return char
     is_empty = True
     for letter in node.children:
         if node.children[letter] != None:
             is_empty = False
+            # print(is_empty)
     if is_empty:
-        return node.char
+        return [node.char]
     
     # BC2: The node is a word but not leaf node
-    child_words = []
-    if node.is_word:
-        # loop through all the nodes and get leaves
-        for letter in node.children:
-            if node.children[letter] is not None:
-                # recursive call on next node
-                next_node = node.children[letter]
-                # combine the current nodes characters with the next node's characters
-                new_ending = node.char + return_ending(next_node)
-                child_words.append(new_ending)
-        return [node.char, *child_words]
+    # child_words = pd.Series([])
+    # if node.is_word:
+    #     # loop through all the nodes and get leaves
+    #     for letter in node.children:
+    #         if node.children[letter] is not None:
+    #             # recursive call on next node
+    #             next_node = node.children[letter]
+    #             # combine the current nodes characters with the next node's characters
+    #             new_ending = node.char + return_ending(next_node)
+    #             child_words.append(new_ending)
+    #     return [node.char, *child_words]
     
     # not a word or a leaf node
     # loop through all the nodes and get leaves
+    node_words = []
     for letter in node.children:
         if node.children[letter] is not None:
             # recursive call on next node
             next_node = node.children[letter]
             # combine the current nodes characters with the next node's characters
-            new_endings = node.char + return_ending(next_node)
-            child_words.append(*new_endings)
+            subword_list = pd.Series(get_endings(next_node))
+            # print(subword_list)
+            subword_list = subword_list.apply(lambda subword: node.char+subword) 
+            node_words += [*subword_list.tolist()]
+    # after going through all the children, return the current node's words  
+    return node_words
 
 
 
@@ -144,7 +151,9 @@ test_trie = Trie()
 test_trie.insert('bob')
 
 test_trie.insert('hello')
+test_trie.insert('handanovic')
+test_trie.insert('hander')
+test_trie.insert('haz')
 
-print(test_trie.root.children['b'].char)
-print(test_trie.root.children['h'].char)
-print(test_trie.root.children)
+
+print(test_trie.find_all_strings('han'))
