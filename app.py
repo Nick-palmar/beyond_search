@@ -105,14 +105,14 @@ def add_user():
 
                     # add the name to the trie, which updates the trie in memory
                     # print(repo_name)
-                    # curr_trie.insert(repo_name)
+                    curr_trie.insert(repo_name)
                     # print(dictionary.get('name'))
             # username was not found
             else:
                 return jsonify({'Not Found': 'User was not found'}), 404
 
             # commit once process completes
-            create_trie_from_db()
+            # create_trie_from_db()
             db.session.commit()
 
             return jsonify({'Success': 'User\'s repos added'}), 201
