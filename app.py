@@ -60,9 +60,9 @@ def should_create_trie() -> bool:
 def index():
     return send_from_directory(app.static_folder, 'index.html')
 
-# @app.errorhandler(404)
-# def not_found(e):
-#     return app.send_static_file('index.html')
+@app.errorhandler(404)
+def not_found(e):
+    return send_from_directory(app.static_folder, 'index.html')
 
 @app.route('/api/create-trie', methods=['GET'])
 # @cross_origin()
