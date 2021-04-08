@@ -1,4 +1,4 @@
-from flask import render_template,send_from_directory,request, jsonify, make_response, send_static_file
+from flask import render_template,send_from_directory,request, jsonify, make_response
 import os
 from models import app, db, ma, RepoSchema, RepoStrings, serialize_search_results
 # from flask_cors import cross_origin
