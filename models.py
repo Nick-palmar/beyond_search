@@ -9,7 +9,7 @@ from boto.s3.connection import S3Connection
 import os
 
 # set up the app 
-app = Flask(__name__, static_folder='../client/build', static_url_path='')
+app = Flask(__name__, static_folder='client/build', static_url_path='')
 # cors = CORS(app)
 # db_uri = config('DB_URL').replace("://", "ql://", 1)
 # s3 = S3Connection(os.environ['DATABASE_URL'])
