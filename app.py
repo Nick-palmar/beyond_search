@@ -57,7 +57,7 @@ def should_create_trie() -> bool:
 
 @app.route('/')
 def index():
-    return send_from_directory(app.static_folder, 'index.html')
+    return send_from_directory('client/build', 'index.html')
 
 # @app.errorhandler(404)
 # def not_found(e):
