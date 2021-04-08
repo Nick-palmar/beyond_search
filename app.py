@@ -50,13 +50,13 @@ def should_create_trie() -> bool:
     trie = get_trie()
     return len(all_repos) > 0 and trie == []
 
-@app.route('/', methods=['GET'])
+@app.route('/')
 def serve():
     return app.send_static_file('index.html')
 
-# @app.errorhandler(404)
-# def not_found(e):
-#     return app.send_static_file('index.html')
+@app.errorhandler(404)
+def not_found(e):
+    return app.send_static_file('index.html')
 
 @app.route('/api/create-trie', methods=['GET'])
 # @cross_origin()
@@ -214,5 +214,5 @@ def get_all_repos():
     return jsonify(serialized_repos)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
 
