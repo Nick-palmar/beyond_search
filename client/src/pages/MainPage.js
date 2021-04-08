@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Typography, Grid, withStyles, Card, CardContent, Container, Snackbar, CardHeader, IconButton } from '@material-ui/core'
 import InputTextField from '../components/InputTextField';
 import LiveTextField from '../components/LiveTextField';
@@ -9,7 +9,6 @@ import ResultStrings from '../components/ResultStrings';
 import axios from 'axios';
 
 const FormData = require('form-data');
-
 
 // const textFieldInfo = [
 //     {
@@ -60,28 +59,74 @@ const FormData = require('form-data');
 
 const MainPage = () => {
 
+    // initialize constants
     const base_api_url = 'https://beyond-search.herokuapp.com/api';
+    const isInitMount = useRef(true);
+    // set the states of the fields
+    const [fieldObj, setFieldObj] = useState({addUser: '', searchRepo: ''})
+    const [flash, setFlash] = useState({'open': false, 'status': null});
+    const [rows, setRows] = useState([])
+    const [emptySearch, setEmptySearch] = useState(true);
+
+
     // create a trie when the page loads
     useEffect(() => {
-        const fetchTrie = async() => {
-            const create_trie_endpoint = base_api_url + '/create-trie';
-            const res = await axios.get(create_trie_endpoint);
-            const data = res.data;
-            console.log(data);
-        };
-        fetchTrie();
-    }, []);
+        // console.log(emptySearch);
+        if (isInitMount.current) {
+            // handle on mount
+            const fetchTrie = async() => {
+                const create_trie_endpoint = base_api_url + '/create-trie';
+                const res = await axios.get(create_trie_endpoint);
+                const data = res.data;
+                console.log(data);
+            };
+            fetchTrie();
+            isInitMount.current = false;
+            console.log('Initial Mount');
+        }
+        else {
+            // axios cancellation variables
+            const CancelToken = axios.CancelToken;
+            const source = CancelToken.source();
+
+            // handle component on update to search trie
+            const search_trie_endpoint = base_api_url + '/search-trie';
+            const fetchSearchTrie = async() => {
+                try {
+                    const res = await axios.get(search_trie_endpoint, { 
+                        params: { 'searchString': fieldObj['searchRepo'],
+                        cancelToken: source.token,
+                        // timeout: 0.0000000000000001
+                    }});
+                    // check to see if the textbox is empty - clear
+                    console.log(emptySearch);
+                    if (emptySearch && fieldObj['searchRepo'] !== '') {
+                        console.log('Cancelled request')
+                        source.cancel();
+                        setRows([]);
+                        return;
+                    }
+                    // request is most up to data - update rows
+                    console.log(fieldObj['searchRepo']);
+                    const data = res.data;
+                    setRows(data);
+                    console.log(data);
+                }
+                catch (err) {
+                    console.log(err);
+                }
+            }
+            fetchSearchTrie();
+            console.log('Fetch Search: ' +  fieldObj['searchRepo']) 
+        }
+  
+    }, [ fieldObj['searchRepo'] ]);
 
     const BurgendyTextTypography = withStyles({
         root: {
           color: "#150e56"
         }
       })(Typography);
-
-    // set the states of the fields
-    const [fieldObj, setFieldObj] = useState({addUser: '', searchRepo: ''})
-    const [flash, setFlash] = useState({'open': false, 'status': null});
-    const [rows, setRows] = useState([])
 
     const flashMessage = (status) => {
         if (status === 'success') {
@@ -98,6 +143,15 @@ const MainPage = () => {
         });
       };
 
+    // const setLastSearch = (value) => {
+    //     _lastSearch = value;
+    //     console.log(_lastSearch)
+    // }
+    // const getLastSearch = () => {
+    //     console.log('Getter' + _lastSearch)
+    //     return _lastSearch;
+    // }
+
     const changeRepo = async(e, field) => {
         // console.log(fieldObj)
         // change the value of add repo
@@ -105,24 +159,32 @@ const MainPage = () => {
             const currObj = {...prevState};
             currObj[field] = e.target.value;
             return currObj;
-        })
+        });
+        if (e.target.value === '') {
+            setEmptySearch(true);
+            console.log('cr' + true);
+        }
+        else {
+            setEmptySearch(false);
+            console.log('cr' + false);
+        }
 
         // send a request to the backend if search repo is being touched
-        if (field === 'searchRepo') {
-            const search_trie_endpoint = base_api_url + '/search-trie';
-            try {
-                const res = await axios.get(search_trie_endpoint, { params: { 'searchString': e.target.value }});
-                const data = res.data;
-                setRows(prevState => {
-                    // const newRows = { ...data };
-                    return data;
-                });
-                console.log(res);
-            }
-            catch (err) {
-                console.log(err);
-            }
-        }
+        // if (field === 'searchRepo') {
+        //     const search_trie_endpoint = base_api_url + '/search-trie';
+        //     try {
+        //         const res = await axios.get(search_trie_endpoint, { params: { 'searchString': e.target.value }});
+        //         const data = res.data;
+        //         setRows(prevState => {
+        //             // const newRows = { ...data };
+        //             return data;
+        //         });
+        //         console.log(data);
+        //     }
+        //     catch (err) {
+        //         console.log(err);
+        //     }
+        // }
     }
 
     const addUser = async(e) => {
