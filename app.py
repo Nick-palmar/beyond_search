@@ -1,5 +1,6 @@
 from flask import send_from_directory, request, jsonify, make_response
 import os
+from os import path
 from models import app, db, ma, RepoSchema, RepoStrings, serialize_search_results
 # from flask_cors import cross_origin
 from trie import Trie
@@ -22,7 +23,8 @@ multiple_repo_schema = RepoSchema(many=True)
 _trie_version = []
 
 # for debugging purposes
-os.path.dirname(os.getcwd())
+print(os.path.dirname(os.getcwd()))
+print(os.path.isfile('C:\\Users\\14165\projects\\beyond_search\\client\\build\\index.html'))
 
 def get_trie() -> List[Trie]:
     return _trie_version
