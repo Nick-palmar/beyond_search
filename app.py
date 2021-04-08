@@ -51,7 +51,7 @@ def should_create_trie() -> bool:
     return len(all_repos) > 0 and trie == []
 
 @app.route('/')
-def serve():
+def index():
     return app.send_static_file('index.html')
 
 @app.errorhandler(404)
