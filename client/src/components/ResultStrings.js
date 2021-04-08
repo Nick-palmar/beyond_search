@@ -16,21 +16,21 @@ const ResultStrings = (props) => {
                 <Table aria-label="simple-table">
                     <TableHead> 
                         <TableRow> 
-                            <StyledTableCell component="th" scope="row">Id</StyledTableCell>
+                            <StyledTableCell component="th" scope="row" >Id</StyledTableCell>
                             <StyledTableCell align="right">Repo Name</StyledTableCell>
-                            <StyledTableCell align="right">Github User</StyledTableCell>
+                            <StyledTableCell align="right" >Github User</StyledTableCell>
                         </TableRow>
                     </TableHead>
 
                     <TableBody>
-                        {props.rows.map((row) => (
+                        {props.rows.map(row => (    
                             <TableRow key={row.id}>
                                 <StyledTableCell component="th" scope="row">
                                     {row.id}
                                 </StyledTableCell>
-                                <StyledTableCell align="right">{row.repoName}</StyledTableCell>
-                                <StyledTableCell align="right">{row.userName}</StyledTableCell>
-                            </TableRow>
+                                <StyledTableCell align="right" >{row.repoName}</StyledTableCell>
+                                <StyledTableCell align="right" >{row.userName}</StyledTableCell>
+                            </TableRow>     
                          ))}
 
                     </TableBody>

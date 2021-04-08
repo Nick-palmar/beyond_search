@@ -17,7 +17,7 @@ const InputTextField = (props) => {
 
     return (
         <>
-            <Grid item xs={12} spacing={3} align='center'>
+            <Grid item xs={12} align='center'>
                 {props.icon}
             {/* </Grid>
             <Grid item xs={12} spacing={0} align='center'> */}

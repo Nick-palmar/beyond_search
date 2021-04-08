@@ -21,16 +21,20 @@ class LetterDict():
 
 
 def get_letter_dict():
-    # TODO: Add underscore and dashes
     letter_dict = {}
     a_ASCII = 97
     z_ASCII = 122
     space_ASCII = 32
+    underscore_ASCII = 95
+    dash_ASCII = 45
 
     for i in range(a_ASCII, z_ASCII+1):
         letter_dict[chr(i)] = None
-    # include spaces
+    # include special characters
     letter_dict[chr(space_ASCII)] = None
+    letter_dict[chr(underscore_ASCII)] = None
+    letter_dict[chr(dash_ASCII)] = None
+
     return letter_dict
 
 class TrieNode():
@@ -78,12 +82,15 @@ class Trie():
         # print(current_node.is_word)
     
 
-    def find_all_strings(self, curr_word: str) -> Optional[List[str]]:
+    def find_all_strings(self, search_word: str) -> Optional[List[str]]:
+        """
+        Search for a word in a trie
+        """
+        search_word = search_word.lower()
         all_strings = []
-        """Search for a word in a trie"""
         curr_node = self.root
         # search the trie
-        for char in curr_word:
+        for char in search_word:
             # print(curr_node.children.get(char))
             if curr_node.children.get(char) == None:
                 # the search string does not exist in the trie, return none
@@ -98,10 +105,10 @@ class Trie():
         
         # check if the final node was a word; if it was append the current search word
         if curr_node.is_word:
-            all_strings.append(curr_word)
+            all_strings.append(search_word)
 
         # go through the remainder of the tree, keeping track of words and append it to all strings
-        base_word = curr_word[:-1]
+        base_word = search_word[:-1]
         all_endings = pd.Series(get_endings(curr_node))
         all_strings = all_endings.apply(lambda word_ending: base_word+word_ending)
         return all_strings.tolist()
@@ -135,16 +142,35 @@ def get_endings(node: TrieNode) -> List[str]:
     # after going through all the children, return the current node's words  
     return node_words
 
-test_trie = Trie()
+# test_trie = Trie()
 
-test_trie.insert('bob')
+# test_trie.insert('bob')
+# test_trie.insert('hello')
+# test_trie.insert('handanovic')
+# test_trie.insert('hander')
+# test_trie.insert('hand')
+# test_trie.insert('haz')
+# test_trie.insert('ha')
+# test_trie.insert('ha ha')
+# test_trie.insert('bots')
+# test_trie.insert('Final-Project-Pacman')
+# test_trie.insert('Final-Project-Shootout')
+# test_trie.insert('kaggle_iowa_houses')
+# test_trie.insert('ML_notebooks')
+# test_trie.insert('music-group-app')
+# test_trie.insert('NodeExpress-BankingPortal')
+# test_trie.insert('Starter-Projects-Pi')
+# test_trie.insert('Sudoku-solver')
+# test_trie.insert('syde-121-classes-A5-group-4')
+# test_trie.insert('syde-121-tic-tac-toe-group-4')
+# test_trie.insert('titanic_ML_starter')
+# test_trie.insert('tsc-form')
+# test_trie.insert('tsc-form-backend')
+# test_trie.insert('Vision')
+# test_trie.insert('WebXR-Measure')
 
-test_trie.insert('hello')
-test_trie.insert('handanovic')
-test_trie.insert('hander')
-test_trie.insert('hand')
-test_trie.insert('haz')
-test_trie.insert('ha')
-test_trie.insert('ha ha')
+# print(test_trie.find_all_strings('F'))
 
-print(test_trie.find_all_strings('h'))
+# t_list = ['12', '678', '1', '13', '12', 'hello', 'hellw', 'hello']
+# t_list = sorted(sorted(t_list, key=len))
+# print(t_list)
