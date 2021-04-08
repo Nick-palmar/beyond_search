@@ -10,7 +10,6 @@ import axios from 'axios';
 
 const FormData = require('form-data');
 
-
 // const textFieldInfo = [
 //     {
 //         fieldName: 'Repo Name',
@@ -61,7 +60,7 @@ const FormData = require('form-data');
 const MainPage = () => {
 
     // initialize constants
-    const base_api_url = 'http://127.0.0.1:5000/api';
+    const base_api_url = 'https://beyond-search.herokuapp.com/api';
     const isInitMount = useRef(true);
     // set the states of the fields
     const [fieldObj, setFieldObj] = useState({addUser: '', searchRepo: ''})

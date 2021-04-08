@@ -2,14 +2,24 @@ from flask import Flask
 from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy
 from decouple import config
-from flask_cors import CORS
+# from flask_cors import CORS
 from typing import List, Dict
 from flask_migrate import Migrate
+from boto.s3.connection import S3Connection
+import os
 
 # set up the app 
 app = Flask(__name__, static_folder='client/build', static_url_path='')
-cors = CORS(app)
-db_uri = config('DB_URL').replace("://", "ql://", 1)
+# cors = CORS(app)
+# db_uri = config('DB_URL').replace("://", "ql://", 1)
+# s3 = S3Connection(os.environ['DATABASE_URL'])
+
+# try to get a connection
+try:
+    db_uri = os.environ['DATABASE_URL'].replace("://", "ql://", 1)
+    print('try')
+except:
+    print('except')
 app.config['SQLALCHEMY_DATABASE_URI'] = db_uri 
 
 # add flask-sql alchemy for db and marshmallow to serialize the data

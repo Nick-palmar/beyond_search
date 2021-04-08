@@ -1,7 +1,8 @@
-from flask import render_template,send_from_directory,request, jsonify, make_response
+from flask import send_from_directory, request, jsonify, make_response
 import os
+from os import path
 from models import app, db, ma, RepoSchema, RepoStrings, serialize_search_results
-from flask_cors import cross_origin
+# from flask_cors import cross_origin
 from trie import Trie
 from typing import List
 from sqlalchemy import and_
@@ -20,6 +21,11 @@ db.session.commit()
 repo_schema = RepoSchema()
 multiple_repo_schema = RepoSchema(many=True)
 _trie_version = []
+
+# for debugging purposes
+print(os.path.isdir('client/build'))
+print('client/folder')
+print(os.path.isfile('client/build/index.html'))
 
 def get_trie() -> List[Trie]:
     return _trie_version
@@ -50,9 +56,16 @@ def should_create_trie() -> bool:
     trie = get_trie()
     return len(all_repos) > 0 and trie == []
 
+@app.route('/')
+def index():
+    return send_from_directory(app.static_folder, 'index.html')
+
+@app.errorhandler(404)
+def not_found(e):
+    return send_from_directory(app.static_folder, 'index.html')
 
 @app.route('/api/create-trie', methods=['GET'])
-@cross_origin()
+# @cross_origin()
 def create_trie():
     try:
         create_trie_from_db()
@@ -64,7 +77,7 @@ def create_trie():
 
 
 @app.route('/api/add-user', methods=['POST'])
-@cross_origin()
+# @cross_origin()
 def add_user():
     user_name = request.form.get('userName')
 
@@ -91,7 +104,7 @@ def add_user():
                     db.session.add(new_repo)
 
                     # add the name to the trie, which updates the trie in memory
-                    print(repo_name)
+                    # print(repo_name)
                     curr_trie.insert(repo_name)
                     # print(dictionary.get('name'))
             # username was not found
@@ -99,6 +112,7 @@ def add_user():
                 return jsonify({'Not Found': 'User was not found'}), 404
 
             # commit once process completes
+            # create_trie_from_db()
             db.session.commit()
 
             return jsonify({'Success': 'User\'s repos added'}), 201
@@ -111,7 +125,7 @@ def add_user():
         return ({'Success': 'User already exists'}), 200
 
 @app.route('/api/search-trie', methods=['GET'])
-@cross_origin()
+# @cross_origin()
 def search_trie():
     search_string = request.args.get('searchString')
 
@@ -161,7 +175,7 @@ def search_trie():
 
 
 @app.route('/api/truncate/<secret_key>', methods=['DELETE'])
-@cross_origin()
+# @cross_origin()
 def delete_all(secret_key):
     if secret_key == '8':
         # secret key is correct, delete all from db
@@ -190,7 +204,7 @@ def test_github():
     return jsonify(repo_info)
 
 @app.route('/api/test-insert')
-@cross_origin()
+# @cross_origin()
 def test_insert():
     repo = RepoStrings('test-insert', 'user1')
     db.session.add(repo)
@@ -199,17 +213,13 @@ def test_insert():
     return jsonify(serialized_repo)
 
 @app.route('/api/get-all', methods=['GET'])
-@cross_origin()
+# @cross_origin()
 def get_all_repos():
     repos = RepoStrings.query.all()
     db.session.commit()
     serialized_repos = multiple_repo_schema.dump(repos)
     return jsonify(serialized_repos)
 
-# @app.route('/')
-# def serve():
-#     return send_from_directory(app.static_folder, 'index.html')
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
 
