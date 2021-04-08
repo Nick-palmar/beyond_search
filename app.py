@@ -1,4 +1,4 @@
-from flask import render_template,send_from_directory,request, jsonify, make_response
+from flask import send_from_directory, request, jsonify, make_response
 import os
 from models import app, db, ma, RepoSchema, RepoStrings, serialize_search_results
 # from flask_cors import cross_origin
@@ -52,11 +52,13 @@ def should_create_trie() -> bool:
 
 @app.route('/')
 def index():
-    return app.send_static_file('index.html')
+    root_dir = os.path.dirname(os.getcwd())
+    print(root_dir)
+    return send_from_directory(os.path.join(root_dir, 'client', 'build'), 'index.html')
 
-@app.errorhandler(404)
-def not_found(e):
-    return app.send_static_file('index.html')
+# @app.errorhandler(404)
+# def not_found(e):
+#     return app.send_static_file('index.html')
 
 @app.route('/api/create-trie', methods=['GET'])
 # @cross_origin()
