@@ -22,7 +22,7 @@ multiple_repo_schema = RepoSchema(many=True)
 _trie_version = []
 
 # for debugging purposes
- os.path.dirname(os.getcwd())
+os.path.dirname(os.getcwd())
 
 def get_trie() -> List[Trie]:
     return _trie_version
