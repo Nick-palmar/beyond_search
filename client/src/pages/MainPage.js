@@ -117,7 +117,7 @@ const MainPage = () => {
                     // const newRows = { ...data };
                     return data;
                 });
-                console.log(data);
+                console.log(res);
             }
             catch (err) {
                 console.log(err);
