@@ -12,9 +12,14 @@ import os
 app = Flask(__name__, static_folder='client/build', static_url_path='')
 # cors = CORS(app)
 # db_uri = config('DB_URL').replace("://", "ql://", 1)
-s3 = S3Connection(os.environ['DATABASE_URL'])
-db_uri = os.environ['DATABASE_URL'].replace("://", "ql://", 1)
-
+# s3 = S3Connection(os.environ['DATABASE_URL'])
+try:
+    db_uri = os.environ['DATABASE_URL'].replace("://", "ql://", 1)
+    print('try')
+except:
+    db_uri = 'postgres://veqrlsgqeoccit:5ba6e1be0ee0c282071f9aaf691ae9585e2923e7adea6dc1dff8e931cfdcc8dd@ec2-54-235-108-217.compute-1.amazonaws.com:5432/d6tilsfbjf9p3u'.replace("://", "ql://", 1)
+    print('except')
+    
 app.config['SQLALCHEMY_DATABASE_URI'] = db_uri 
 
 # add flask-sql alchemy for db and marshmallow to serialize the data
