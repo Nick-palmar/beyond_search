@@ -1,27 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { Typography, Grid, withStyles, Card, CardContent, Container, Snackbar } from '@material-ui/core'
+import { Typography, Grid, withStyles, Card, CardContent, Container, Snackbar, CardHeader, IconButton } from '@material-ui/core'
 import InputTextField from '../components/InputTextField';
 import LiveTextField from '../components/LiveTextField';
 import SmallButton from '../components/SmallButton';
-import { Add, Search, SkipPreviousRounded } from '@material-ui/icons'
+import { Add, Search, Delete } from '@material-ui/icons';
+import { Alert } from '@material-ui/lab';
 import ResultStrings from '../components/ResultStrings';
 import axios from 'axios';
 
 const FormData = require('form-data');
 
 
-const textFieldInfo = [
-    {
-        fieldName: 'Repo Name',
-        icon: <Add style={{color: '#7b113a'}}/>,
-        helperText: 'Add a repo'
-    },
-    {
-        fieldName: 'Repo Name',
-        icon: <Search style={{color: '#7b113a'}}/>,
-        helperText: 'Search for repo'
-    }
-]
+// const textFieldInfo = [
+//     {
+//         fieldName: 'Repo Name',
+//         icon: <Add style={{color: '#7b113a'}}/>,
+//         helperText: 'Add a repo'
+//     },
+//     {
+//         fieldName: 'Repo Name',
+//         icon: <Search style={{color: '#7b113a'}}/>,
+//         helperText: 'Search for repo'
+//     }
+// ]
 
 // const rows = [
 //     {
@@ -79,15 +80,22 @@ const MainPage = () => {
 
     // set the states of the fields
     const [fieldObj, setFieldObj] = useState({addUser: '', searchRepo: ''})
-    const [open, setOpen] = useState(false);
+    const [flash, setFlash] = useState({'open': false, 'status': null});
     const [rows, setRows] = useState([])
 
-    const flashMessage = () => {
-        setOpen(true);
+    const flashMessage = (status) => {
+        if (status === 'success') {
+            setFlash({ 'open': true, 'status': 'success'});
+        }
+        else {
+            setFlash({ 'open': true, 'status': 'error'});
+        }
       };
     
       const handleClose = (event) => {
-        setOpen(false);
+        setFlash(prevState => {
+            return { ...prevState, 'open': false};
+        });
       };
 
     const changeRepo = async(e, field) => {
@@ -128,10 +136,10 @@ const MainPage = () => {
             const res = await axios.post(add_user_endpoint, form_data);
             const data = res.data;
             console.log(data);
-            flashMessage();
+            flashMessage('success');
         }
         catch (err) {
-           
+           flashMessage('error');
         }
 
         // clear the user from the object
@@ -145,16 +153,30 @@ const MainPage = () => {
 
     }
 
+    const handleDeleteClicked = async() => {
+        // delete all users from trie 
+        const delete_users_endpoint = base_api_url + '/truncate/8';
+        const res = await axios.delete(delete_users_endpoint);
+        console.log('Data Deleted');
+    }
+
     return (
         <>
         <Container maxWidth='xs'>
-            <Grid container spacing={10} alignItems='center' justify="center" style={{ minHeight: '100vh' }}>
+            <Grid container spacing={8} alignItems='center' justify="center" style={{ minHeight: '100vh' }}>
                 <Grid item xs={12} className='title' align='center'>
                     <BurgendyTextTypography variant='h2'> Beyond Search </BurgendyTextTypography>
                 </Grid>
                 
                 <Grid item xs={12} align='center'>
                     <Card>
+                        <CardHeader
+                            action={
+                                    <IconButton aria-label="delete" onClick={handleDeleteClicked}>
+                                        <Delete style={{color: '#880e4f'}} />
+                                    </IconButton>
+                            }
+                        />
                         <CardContent>
                             <InputTextField fieldValue={fieldObj['addUser']} fieldName='User Name' icon={ <Add style={{color: '#7b113a'}} /> } helperText= 'Add a github user' updateTextField={changeRepo}/>
                             <SmallButton buttonClicked={addUser}/>
@@ -162,11 +184,11 @@ const MainPage = () => {
                     </Card>
                 </Grid>
 
-                {/* <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                    <Alert onClose={handleClose} severity="success">
-                        This is a success message!
+                <Snackbar anchorOrigin={{ vertical: 'center', horizontal: 'center' }} open={flash['open']} autoHideDuration={3000} onClose={handleClose}>
+                    <Alert onClose={handleClose} severity={flash['status']}>
+                        {(flash['status'] === 'success') ? 'User Added!': 'User Not Added :('}
                     </Alert>
-                </Snackbar> */}
+                </Snackbar>
 
                 <Grid item xs={12} align='center'>
                     <Card>
