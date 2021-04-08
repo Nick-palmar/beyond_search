@@ -20,7 +20,6 @@ try:
     print('try')
 except:
     print('except')
-
 app.config['SQLALCHEMY_DATABASE_URI'] = db_uri 
 
 # add flask-sql alchemy for db and marshmallow to serialize the data
