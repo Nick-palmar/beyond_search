@@ -60,7 +60,7 @@ const FormData = require('form-data');
 
 const MainPage = () => {
 
-    const base_api_url = 'http://127.0.0.1:5000/api';
+    const base_api_url = 'https://beyond-search.herokuapp.com/api';
     // create a trie when the page loads
     useEffect(() => {
         const fetchTrie = async() => {

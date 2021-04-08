@@ -2,13 +2,13 @@ from flask import Flask
 from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy
 from decouple import config
-from flask_cors import CORS
+# from flask_cors import CORS
 from typing import List, Dict
 from flask_migrate import Migrate
 
 # set up the app 
 app = Flask(__name__, static_folder='client/build', static_url_path='')
-cors = CORS(app)
+# cors = CORS(app)
 db_uri = config('DB_URL').replace("://", "ql://", 1)
 app.config['SQLALCHEMY_DATABASE_URI'] = db_uri 
 
