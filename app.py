@@ -23,8 +23,8 @@ multiple_repo_schema = RepoSchema(many=True)
 _trie_version = []
 
 # for debugging purposes
-print(os.path.dirname(os.getcwd()))
-print(os.path.isfile('C:\\Users\\14165\projects\\beyond_search\\client\\build\\index.html'))
+print(os.path.isdir(app.static_folder))
+print(app.static_folder)
 
 def get_trie() -> List[Trie]:
     return _trie_version
@@ -57,9 +57,7 @@ def should_create_trie() -> bool:
 
 @app.route('/')
 def index():
-    root_dir = os.path.dirname(os.getcwd())
-    print(root_dir)
-    return send_from_directory(os.path.join(root_dir, 'client', 'build'), 'index.html')
+    return send_from_directory(app.static_folder, 'index.html')
 
 # @app.errorhandler(404)
 # def not_found(e):
