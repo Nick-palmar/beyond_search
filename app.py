@@ -23,8 +23,9 @@ multiple_repo_schema = RepoSchema(many=True)
 _trie_version = []
 
 # for debugging purposes
-print(os.path.isdir(app.static_folder))
-print(app.static_folder)
+print(os.path.isdir('client/build'))
+print('client/folder')
+print(os.path.isfile('client/build/index.html'))
 
 def get_trie() -> List[Trie]:
     return _trie_version
