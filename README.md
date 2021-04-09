@@ -37,7 +37,7 @@ The repo searching algorithm in the backend makes use of a data struture called 
 
 ## Screenshots
 This is the main web application page
-![alt text](https://github.com/Nick-palmar/beyond_search/tree/main/images/beyond_search_main.png "Beyond Search UI")
+![alt text](https://github.com/Nick-palmar/beyond_search/blob/main/images/beyond_search_main.png "Beyond Search UI")
 
 ## Usage
 1. To add a user, type in their exact user name and press *add*. You will recieve a pop up telling you if the user was added or not.
